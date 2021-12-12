@@ -46,9 +46,9 @@ function HistoryScreenHome({route, navigation}){
                         {
                             container:{
                                 backgroundColor:
-                                    sum >= 2000
+                                    sum >= 1400
                                         ? 'red'
-                                        : sum>1000
+                                        : sum>700
                                             ? '#70d7c7'
                                             :'orange'
                             },

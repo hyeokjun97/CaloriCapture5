@@ -5,15 +5,32 @@ class HistoryStorage{
     static #history={
         "aAMRxEJVuXdUQwPSkxU2ME": {
             "2021-12-07": [
-                {"foodList": ["오곡밥"], "amountList": [1.0],"totalKcal":200,"time":10},
-                {"foodList": ["닭볶음탕"], "amountList": [1.0],"totalKcal":600,"time":15},
+                {"foodList": ["오곡밥","불고기"], "amountList": [1.0,1.0],"totalKcal":794,"time":11},
+                {"foodList": ["칼국수"], "amountList": [1.0],"totalKcal":420,"time":15},
+                {"foodList": ["닭볶음탕"], "amountList": [1.0],"totalKcal":230,"time":22},
             ],
             "2021-12-08": [
-                {"foodList": ["삼계탕","오곡밥"], "amountList": [1.0,1.0],"totalKcal":1000,"time":8},
-                {"foodList": ["쌀밥"], "amountList": [1.0],"totalKcal":500,"time":17},
+                {"foodList": ["삼계탕","오곡밥"], "amountList": [1.0,1.0],"totalKcal":762,"time":8},
+                {"foodList":["김치볶음밥"], "amountList":[1.0,],"totalKcal":446,"time":13},
+                {"foodList": ["닭볶음탕"], "amountList": [1.0],"totalKcal":230,"time":20},
             ],
             "2021-12-09": [
-                {"foodList":["쌀밥","시레기국","닭볶음탕","백김치","김치","버섯볶음"], "amountList":[1.0,1.0,0.3,0.2,0.2,0.2],"totalKcal":2000,"time":17}
+                {"foodList":["닭볶음탕",], "amountList":[1.0],"totalKcal":230,"time":14},
+                {"foodList":["육개장","현미밥"], "amountList":[1.0],"totalKcal":486,"time":20}
+            ],
+            "2021-12-10": [
+                {"foodList":["카레 덮밥",], "amountList":[1.0,],"totalKcal":544,"time":14},
+                {"foodList":["피자",], "amountList":[0.5,],"totalKcal":242,"time":17}
+            ],
+            "2021-12-11": [
+                {"foodList":["김치볶음밥"], "amountList":[1.0,],"totalKcal":446,"time":13}
+            ],
+            "2021-12-12": [
+                {"foodList":["잔치국수","배추김치"], "amountList":[1.0,1.0],"totalKcal":455,"time":17},
+                {"foodList":["양념치킨"], "amountList":[0.5],"totalKcal":129,"time":23}
+            ],
+            "2021-12-13": [
+                {"foodList":["된장찌개","오곡밥"], "amountList":[1.0,1.0],"totalKcal":479,"time":13}
             ],
         },
     }//key 값은 userid
