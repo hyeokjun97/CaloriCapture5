@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react'
-import {Text,View,StyleSheet} from 'react-native'
-import {Grid, LineChart,AreaChart,PieChart, XAxis, YAxis,} from "react-native-svg-charts";
+import {Text, View, StyleSheet, ScrollView} from 'react-native'
+import {Grid, LineChart, AreaChart, PieChart, XAxis, YAxis, ProgressCircle,} from "react-native-svg-charts";
 import * as shape from "d3-shape";
-import {Circle, G, Line, Rect} from "react-native-svg";
+import {Circle, G, Line, Rect,Svg} from "react-native-svg";
 export default function DetailNutritionGraph({dateString,myDetailHistory,myMealsTotal,oneDayInfo}){
     const data_percentage = Array.from({length:201},(v,i)=>i);
     const data_time=Array.from({length:13},(v,i)=>0);
@@ -18,22 +18,10 @@ export default function DetailNutritionGraph({dateString,myDetailHistory,myMeals
     ];
     const dataFieldArr=[
         {name:'kcal',stroke:'rgba(255, 45, 44, 1)'},
-        {data:'fat',stroke:'rgba(255, 204, 0, 1)'},
-        {data:'carb',stroke:'rgba(134, 65, 244, 1)'},
-        {data:'protein',stroke:'rgba(144, 144, 144, 1)'},
+        {name:'fat',stroke:'rgba(255, 204, 0, 1)'},
+        {name:'carb',stroke:'rgba(134, 65, 244, 1)'},
+        {name:'protein',stroke:'rgba(144, 144, 144, 1)'},
     ];
-    /*const graphSetArr=[
-        'rgba(255, 45, 44, 0.4)',
-        'rgba(255, 204, 0, 0.4)',
-        'rgba(134, 65, 244, 0.4)',
-        'rgba(204, 204, 204, 0.4)'
-    ]*/
-    /*const graphSetArr=[
-        {fill:'rgba(255, 45, 44, 0.4)',style:{flex: 1}},
-        {fill:'rgba(255, 204, 0, 0.4)',style: StyleSheet.absoluteFill},
-        {fill:'rgba(134, 65, 244, 0.4)',style: StyleSheet.absoluteFill},
-        {fill:'rgba(204, 204, 204, 0.4)',style: StyleSheet.absoluteFill}
-    ]*/
     const stackData=()=>{
         let i=0;
         let idx=0;
@@ -59,51 +47,21 @@ export default function DetailNutritionGraph({dateString,myDetailHistory,myMeals
             data_protein[i]=(sum_protein/72)*100;
         }
     }
-    if (Object.keys(myMealsTotal).length !== 0) {
+
+    if (myMealsTotal!==undefined&&Object.keys(myMealsTotal).length !== 0) {
         stackData();
     }
     const axesSvg = { fontSize: 10, fill: '#5048e5' };
     const verticalContentInset = { top: 30, bottom: 30 }
     const xAxisHeight = 20;
-    const DataRect=(...dataFields)=>{
-        return <G x={5} y={5}>
-            <Rect
-                height={ 30 }
-                width={ 55 }
-                stroke={ 'grey' }
-                fill={ 'white' }
-                ry={ 10 }
-                rx={ 10 }
-            >
-            {
-                dataFields.map((field,idx)=>{
-                    return<View>
-                        <Text>
-                            {field.name}
-                        </Text>
-                        <Line
-                            x1={ 10 }
-                            x2={ 90 }
-                            y1={10}
-                            y2={10}
-                            stroke={field.stroke}
-                            strokeWidth={ 2 }
-                        />
-                    </View>
-                })
-            }
-            </Rect>
-        </G>
-    }
-
     return (<View style={styles.GraphBox}>
-            <Text style={styles.NutritionData}>{dateString}'s Nutrition Data</Text>
         {
             Object.keys(myMealsTotal).length == 0
-                ? <View style={{height: "100%", padding: 20, flexDirection: 'column', justifyContent:'center',alignItems:'center',top: 20,}}>
+                ? <View style={{height: 320, padding: 20, flexDirection: 'column', justifyContent:'center',alignItems:'center',top: 20,}}>
                     <Text style={{}}>Loading...</Text>
                 </View>
-                : <View style={{height: "100%", padding: 20, flexDirection: 'row', top: 20,}}>
+                : <View style={styles.AccGraph}>
+                    <Text style={styles.NutritionData}>{dateString}'s Nutrition Data</Text>
                         <YAxis
                             data={data_percentage}
                             style={{marginBottom: xAxisHeight}}
@@ -116,9 +74,9 @@ export default function DetailNutritionGraph({dateString,myDetailHistory,myMeals
                                 style={{flex: 1}}
                                 data={nutritionDataArr}
                                 contentInset={verticalContentInset}
+                                yMax={100}
                             >
                                 <Grid/>
-                                <DataRect dataFields={dataFieldArr}/>
                                 <HorizontalLine/>
                             </LineChart>
                             <XAxis
@@ -132,6 +90,46 @@ export default function DetailNutritionGraph({dateString,myDetailHistory,myMeals
                         </View>
                     </View>
         }
+            <View style={styles.DataFields}>
+                <View style={[styles.Field, {borderBottomColor:'rgba(255, 45, 44, 1)'}]}>
+                    <Text>kcal</Text>
+                </View>
+                <View style={[styles.Field,{borderBottomColor:'rgba(255, 204, 0, 1)'}]}>
+                    <Text>fat</Text>
+                </View>
+                <View style={[styles.Field,{borderBottomColor:'rgba(134, 65, 244, 1)'}]}>
+                    <Text>carbon</Text>
+                </View>
+                <View style={[styles.Field,{borderBottomColor:'rgba(144, 144, 144, 1)'}]}>
+                    <Text>protein</Text>
+                </View>
+            </View>
+            <View style={styles.ProgressContainer}>
+                <View style={styles.ProgressInnerContainer}>
+                    <ProgressNutrition
+                        nutritionName={dataFieldArr[0].name}
+                        dataNutrition={data_kcal}
+                        Color={dataFieldArr[0].stroke}
+                    />
+                    <ProgressNutrition
+                        nutritionName={dataFieldArr[1].name}
+                        dataNutrition={data_fat}
+                        Color={dataFieldArr[1].stroke}
+                    />
+                </View>
+                <View style={styles.ProgressInnerContainer}>
+                    <ProgressNutrition
+                        nutritionName={dataFieldArr[2].name}
+                        dataNutrition={data_carbon}
+                        Color={dataFieldArr[2].stroke}
+                    />
+                    <ProgressNutrition
+                        nutritionName={dataFieldArr[3].name}
+                        dataNutrition={data_protein}
+                        Color={dataFieldArr[3].stroke}
+                    />
+                </View>
+            </View>
         </View>
     );
 }
@@ -139,23 +137,36 @@ const HorizontalLine = (({ y }) => (
     <Line
         x1={ '0%' }
         x2={ '100%' }
-        y1={ '120' }
-        y2={ '120' }
+        y1={ '135' }
+        y2={ '135' }
         stroke={ 'grey' }
         strokeDasharray={ [ 6, 4 ] }
         strokeWidth={ 3 }
     />
 ))
-
+function ProgressNutrition({nutritionName,dataNutrition,Color}){
+    return (<View style={styles.ProgressElem}>
+        <ProgressCircle
+            style={ { height: 130} }
+            progress={ dataNutrition[24]/100 }
+            progressColor={Color}
+            startAngle={ -Math.PI * 0.8 }
+            endAngle={ Math.PI * 0.8 }
+        >
+            <View style={{width:"100%",height:"100%",justifyContent:"center",alignItems:"center"}}>
+                <Text style={{fontWeight:"bold",fontSize:25}}>{nutritionName}</Text>
+                <Text>{parseFloat(dataNutrition[24]).toFixed(1)}%</Text>
+            </View>
+        </ProgressCircle>
+    </View>);
+}
 const styles=StyleSheet.create({
     /*Screen ELEMENTS*/
-
     NutritionData: {
         paddingTop: 10,
         paddingLeft:10,
         position: 'absolute',
         width: '100%',
-        height: '80%',
         textAlign: 'left',
         textAlignVertical: 'center',
         fontSize: 16,
@@ -163,11 +174,20 @@ const styles=StyleSheet.create({
         color: '#5048e5',
     },
     GraphBox: {
-        height: '90%',
-        width: '90%',
-        backgroundColor: '#fff',
+        flexDirection:"column",
+        justifyContent:'space-between',
+        alignSelf:"baseline",
+        height: 750,
+        width: '97%',
+        marginTop:10,
+    },
+    AccGraph:{
         borderRadius: 5,
-        //shadow
+        height: 320,
+        padding: 15,
+        flexDirection: 'row',
+        top: 20,
+        backgroundColor:"#fff",
         shadowOffset: {
             width: 0,
             height: 7,
@@ -176,4 +196,52 @@ const styles=StyleSheet.create({
         shadowRadius: 9.0,
         elevation: 15,
     },
+    DataFields:{
+        marginTop:10,
+        justifyContent:"space-around",
+        alignItems:"center",
+        flexDirection: "row",
+        height: 50,
+        width: '100%',
+        backgroundColor: '#fff',
+        shadowOffset: {
+            width: 0,
+            height: 7,
+        },
+        shadowOpacity: 0.35,
+        shadowRadius: 9.0,
+        elevation: 15,
+    },
+    Field:{
+        height:25,
+        borderColor:'#fff',
+        borderWidth:2,
+    },
+    ProgressContainer:{
+      flexDirection:"column",
+        justifyContent:'center',
+      alignItems:"center",
+        height: 320,
+        width: '100%',
+    },
+    ProgressInnerContainer:{
+        height:'50%',
+        width: '100%',
+        flexDirection:"row",
+        justifyContent:"space-between",
+    },
+    ProgressElem:{
+        padding:10,
+        width: '49%',
+        height:150,
+        borderRadius:5,
+        backgroundColor: '#fff',
+        shadowOffset: {
+            width: 0,
+            height: 7,
+        },
+        shadowOpacity: 0.35,
+        shadowRadius: 9.0,
+        elevation: 15,
+    }
 })

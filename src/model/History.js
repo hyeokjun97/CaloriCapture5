@@ -16,6 +16,9 @@ class HistoryInfo{
         }));
         return response;
     }
+    static convertDateFormat(date) {
+        return date.toLocaleDateString().replace(/\./g, '').split(' ').map((v,i)=> i > 0 && v.length < 2 ? '0' + v : v).join('-');
+    }
 }
 
 module.exports=HistoryInfo;

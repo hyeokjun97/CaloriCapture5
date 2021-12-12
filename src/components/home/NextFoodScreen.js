@@ -1,5 +1,6 @@
 import {Text, View, Button, StyleSheet, TouchableOpacity, Image} from "react-native";
 import React from 'react';
+import HistoryInfo from '../../model/History'
 //import "src/components/Food_Photo"
 
 
@@ -17,8 +18,6 @@ export default function NextFoodScreen({route, navigation}) {
     const axesSvg = { fontSize: 14, fill: '#5048e5' };
     const verticalContentInset = { top: 5, bottom: 5 }
     const xAxisHeight = 20
-
-
     // JUN WOKRING
     return <View style={styles.Container}>
         <View style = {styles.header}>

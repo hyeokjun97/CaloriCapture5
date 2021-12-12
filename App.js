@@ -23,6 +23,8 @@ import ScreenNames from "./src/components/ScreenNames";
 import FoodDetailScreen from "./src/components/home/detail/FoodDetailScreen";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 //EDIT
+import User from "./src/model/User"
+import HistoryInfo from "./src/model/History"
 
 function HomeScreen() {
     return (
@@ -61,6 +63,10 @@ export default function App() {
     const routeScreen = async () => {
         let loggedIn = await isLoggedIn();
         if (loggedIn){
+            User.getMyInfo().then((myInfo)=>{
+            const tmpHistoryInfo=new HistoryInfo(myInfo.id);
+            User.setMyId(myInfo.id);
+            User.setMyHistoryInfo(tmpHistoryInfo.historyList);
             const screen = <NavigationContainer>
                 <Tab.Navigator
                     screenOptions={({ route }) => ({
@@ -96,6 +102,7 @@ export default function App() {
                 </Tab.Navigator>
             </NavigationContainer>;
             setMainScreen(screen);
+            })
         }else{
             const screen = <NavigationContainer>
                 <Stack.Navigator>
