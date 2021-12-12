@@ -24,8 +24,8 @@ export default function FoodDetailScreen({route, navigation}){
     const temp = JSON.parse(obj);
     const [candiList,setCandiList]=useState([]);
 
-    const foodImage = (JSON.stringify(route.params.foodImage)); // 사진 추출
-    console.log("PHOTO PATH ==>:", foodImage)
+    const foodImage = (route.params.foodImage); // 사진 추출
+    console.log("\n\n\n\nPHOTO PATH ==>:", foodImage, "\n\n\n\n\n");
     const foodTagsPos=temp.map((foodTag)=>{
         const x=foodTag.x;
         const y=foodTag.y;
@@ -82,10 +82,12 @@ export default function FoodDetailScreen({route, navigation}){
                                 </TouchableOpacity>
                                 }
                             />
+                            <Text style = {{ fontWeight: 'bold', color: '#5048e5', fontSize:15,}}>음식 추가</Text>
                             <View style={styles.inputView}>
+
                                 <TextInput
                                     style={styles.textInput}
-                                    placeholder = "음식 추가"
+                                    placeholder = {"음식 추가"}
                                     autoCapitalize='none'
                                 />
                             </View>
@@ -123,11 +125,12 @@ export default function FoodDetailScreen({route, navigation}){
                                 keyExtractor={item => item.id}
                                 data={selectedFood}
                                 renderItem={({item}) =>
-                                    <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
+                                    <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center', color: 'pink', }}>
                                         <Text style = {styles.elem} >{'\u2022'} {item}</Text>
                                         <Slider
                                             value={1}
                                             maximumValue = {2.5}
+
                                         />
                                     </View>
                                 }
@@ -150,18 +153,17 @@ export default function FoodDetailScreen({route, navigation}){
                     </View>
                 </View>
             </Modal>
-            <View style={{backgroundColor:"grey", width: "90%", height:"80%", //그냥 배경입니다 이곳에 사진이 옵니다.
+            <View style={{backgroundColor:"#000", width: "90%", height:"80%", position: "absolute",//그냥 배경입니다 이곳에 사진이 옵니다.
                  }}>
                 {/* 삽입될 이미지 abosolute로 중앙에 있으면됨*/}
-                 <Image style={{width: 500, height:500, position: 'absolute', resizeMode:'contain'}} source={{uri: 'data:image/' + foodImage}}/>
+                 <Image style={{width: 500, height:500, resizeMode:'contain', left: -55, bottom: -15,}} source={{uri: 'data:image/png;base64,' + foodImage}}/>
                 {/* 오렌지 안에서 자유롭게 위치하는 태그들*/}
                 <View style={{
-
-
+                    position: "absolute",
                 }}>
                 {
                     foodTagsPos.map((pos)=> <TouchableOpacity
-                            style={[styles.button,]}
+                            style={[styles.button, {position: "absolute",}]}
                             onPress={() => {
                                 setModalVisible(true);
                                 const candis=pos.foodCandi;
@@ -172,7 +174,7 @@ export default function FoodDetailScreen({route, navigation}){
                         >
                             <Text style={{
                                 position: "absolute",
-                                top: pos.y/2, left:pos.x/2,
+                                top: (pos.y/7)+20, left:(pos.x/7)+25,
                                 backgroundColor: "#5048e5",
                                 borderColor:'#fff',
                                 borderRadius: 3,
@@ -188,7 +190,7 @@ export default function FoodDetailScreen({route, navigation}){
                 }
                 </View>
             </View>
-            <View style={{alignContent:'center', width:'80%', marginTop: 15, backgroundColor:'#FFF',borderRadius: 5,  }}>
+            <View style={{ width:'80%', marginTop: 15, backgroundColor:'#FFF',borderRadius: 5, top: 250  }}>
                 <TouchableOpacity style={{ alignItems: "center",}} onPress={ () => {setAmount(true)}}>
                     <Text style={{fontSize: 25, color: '#5048e5'}}> 완료 </Text>
                 </TouchableOpacity>
@@ -275,7 +277,7 @@ const styles = StyleSheet.create({
     },
 
     textStyle: {
-        color: "white",
+        color: "purple",
         fontWeight: "bold",
         textAlign: "center"
     },
@@ -291,7 +293,7 @@ const styles = StyleSheet.create({
     },
     inputView: {
         marginLeft: 0,
-        backgroundColor: '#fff',
+        backgroundColor: '#efefef',
         borderRadius: 5,
         width: '100%',
         height: 45,
@@ -304,7 +306,8 @@ const styles = StyleSheet.create({
         height: 50,
         flex: 1,
         marginLeft: 10,
-        color: '5048e5',
+        color: '#5048e5',
+
     },
     tableElem:{
         padding: 5,
