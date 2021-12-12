@@ -10,20 +10,22 @@ import {
     Modal,
     FlatList,
     TouchableOpacity,
-    TextInput
+    TextInput, Image,
 } from "react-native";
-
+import Slider from "react-native-sliders";
 import NextFoodScreen from "../NextFoodScreen";
 
 
 
 export default function FoodDetailScreen({route, navigation}){
     const [modalVisible, setModalVisible] = useState(false);
-
+    const [amountUp, setAmount] = useState(false);
     const obj = JSON.stringify(route.params?.foods);
     const temp = JSON.parse(obj);
     const [candiList,setCandiList]=useState([]);
 
+    const foodImage = (JSON.stringify(route.params.foodImage)); // 사진 추출
+    console.log("PHOTO PATH ==>:", foodImage)
     const foodTagsPos=temp.map((foodTag)=>{
         const x=foodTag.x;
         const y=foodTag.y;
@@ -33,10 +35,9 @@ export default function FoodDetailScreen({route, navigation}){
         return {x,y, w, h, foodCandi};
     });
     const [selectedFood,setSelected]=useState(foodTagsPos.map(foodList => foodList.foodCandi[0]["food_name"]));
-
+    const [amountList, setAmountList] = useState([]);
 
     function changeFoodItem(preFoodName, newFoodName){
-
         if(selectedFood.includes( newFoodName) === false) {
             const a = [...selectedFood, newFoodName]; //UseState 쓰면 안됨..
             const b = a.filter((food) => { return food !== preFoodName});
@@ -50,7 +51,7 @@ export default function FoodDetailScreen({route, navigation}){
         }
 
     }
-    // TODO
+
     return <SafeAreaView>
         <View style={styles.container}>
             <Modal
@@ -64,10 +65,9 @@ export default function FoodDetailScreen({route, navigation}){
             >
                 <View style={styles.centeredView }>
                     <View style={styles.modalViewContainer}>
-                        <View style={styles.modalTitle}>
+                    <View style={styles.modalTitle}>
                             <Text style = {styles.modalTitleText}>{candiList[0]}</Text>
-                        </View>
-
+                    </View>
                         <View style={styles.modalLists}>
                             <FlatList
                                 keyExtractor={item => item.id}
@@ -87,31 +87,80 @@ export default function FoodDetailScreen({route, navigation}){
                                     style={styles.textInput}
                                     placeholder = "음식 추가"
                                     autoCapitalize='none'
-
                                 />
                             </View>
                         </View>
-                        <View style={styles.modalButton}>
                             <TouchableOpacity
-                                style={{ alignItems: "center"}}
+                                style={styles.modalButton}
                                 onPress={() => {
                                     setModalVisible(!modalVisible)
-                                    }
-                                }
+                                }}
                             >
-                                <Text style={styles.elem}>DONE</Text>
+                                <Text style={{fontSize: 20, color: '#5048e5', marginLeft: 250,
+
+                                    width: "100%",}}>완료</Text>
+                            </TouchableOpacity>
+
+                </View>
+                </View>
+            </Modal>
+            <Modal ////Second
+                animationType="slide"
+                transparent={true}
+                visible={amountUp}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    setAmount(!amountUp);
+                }}
+            >
+                <View style={styles.centeredView }>
+                    <View style={styles.modalViewContainer}>
+                        <View style={styles.modalTitle}>
+                            <Text style = {styles.modalTitleText}>얼마나 드셨나요?</Text>
+                        </View>
+                        <View style={styles.modalLists}>
+                            <FlatList
+                                keyExtractor={item => item.id}
+                                data={selectedFood}
+                                renderItem={({item}) =>
+                                    <View style={{ flex: 1, alignItems: 'stretch', justifyContent: 'center' }}>
+                                        <Text style = {styles.elem} >{'\u2022'} {item}</Text>
+                                        <Slider
+                                            value={1}
+                                            maximumValue = {2.5}
+                                        />
+                                    </View>
+                                }
+                            />
+                        </View>
+                        <View style={styles.modalButton}>
+                            <TouchableOpacity
+                                style={{ alignItems: "center",}}
+                                onPress={() => {
+                                    setAmount(!amountUp)
+                                    navigation.navigate('NextFoodScreen');
+                                    //console.log("HERE: ",navigation);
+                                    //console.log("Parent: ",navigation.getParent(navigation).navigate('NextFoodScreenName'));
+                                    /*상영이 함수를 여기서 호출하여 selectedFood를 인자로 넘기고, 우리는 메인 화면으로 이동*/
+                                }}
+                            >
+                                <Text style={styles.elem}>입력 완료!</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </View>
             </Modal>
-            <View style={{backgroundColor:"tomato", width: "90%", height:"90%", //그냥 배경입니다 이곳에 사진이 옵니다.
+            <View style={{backgroundColor:"grey", width: "90%", height:"80%", //그냥 배경입니다 이곳에 사진이 옵니다.
                  }}>
-                {/* 사진이 올라갈 곳*/}
-                <View >
+                {/* 삽입될 이미지 abosolute로 중앙에 있으면됨*/}
+                 <Image style={{width: 500, height:500, position: 'absolute', resizeMode:'contain'}} source={{uri: 'data:image/' + foodImage}}/>
+                {/* 오렌지 안에서 자유롭게 위치하는 태그들*/}
+                <View style={{
+
+
+                }}>
                 {
-                    foodTagsPos.map((pos)=>
-                        <TouchableOpacity
+                    foodTagsPos.map((pos)=> <TouchableOpacity
                             style={[styles.button,]}
                             onPress={() => {
                                 setModalVisible(true);
@@ -121,30 +170,35 @@ export default function FoodDetailScreen({route, navigation}){
                                 }));
                             }}
                         >
-                            <Text style={{position: "absolute", top: pos.y/2, left:pos.x/2 }}>
-                                x: {pos.x} y: {pos.y} NAME: {pos.foodCandi[0]["food_name"]}
+                            <Text style={{
+                                position: "absolute",
+                                top: pos.y/2, left:pos.x/2,
+                                backgroundColor: "#5048e5",
+                                borderColor:'#fff',
+                                borderRadius: 3,
+                                borderWidth: 1,
+                                fontSize: 15,
+                                color: '#fff',
+                            }}>
+                                {pos.foodCandi[0]["food_name"]}
+                                {/* 추후에 이미지에 맞춰서 x, y값 변환 */}
                             </Text>
-
                         </TouchableOpacity>
                     )
                 }
                 </View>
-                {/* 해당 끼니를 기록하고, 출력값으로 배열에 음식 리스트 */}
-                {/* 혹시 이 힛미 버튼을 매뉴 상단에 " < Back" 버튼 위치에 올려주실수 있나요*/}
-                <Button title={"Hit Me!"}
-                        style={{position: "absolute", top: 300, left:300 }}
-                        onPress={() => navigation.navigate('NextFoodScreen', {
-                            foods: selectedFood,
-                            otherParam: 'anything you want here',
-                        })}
-                />
-
+            </View>
+            <View style={{alignContent:'center', width:'80%', marginTop: 15, backgroundColor:'#FFF',borderRadius: 5,  }}>
+                <TouchableOpacity style={{ alignItems: "center",}} onPress={ () => {setAmount(true)}}>
+                    <Text style={{fontSize: 25, color: '#5048e5'}}> 완료 </Text>
+                </TouchableOpacity>
             </View>
         </View>
     </SafeAreaView>
 
 };
 //tag 가 있다고 가정하고
+
 
 const styles = StyleSheet.create({
     container: {
@@ -202,8 +256,14 @@ const styles = StyleSheet.create({
 
     },
     modalButton:{
-        alignItems: "stretch",
+        alignItems: 'center',
+        justifyContent:'center',
         width: "100%",
+        backgroundColor: '#fff',
+        borderColor: "#5048e5",
+        borderWidth: 2,
+        borderRadius: 5,
+        height: ' 8%',
     },
 
     button: {
@@ -230,27 +290,21 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
     },
     inputView: {
-        marginLeft: 28,
-        backgroundColor: '#D2D0FC',
+        marginLeft: 0,
+        backgroundColor: '#fff',
         borderRadius: 5,
-        width: '80%',
+        width: '100%',
         height: 45,
         marginBottom:20,
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.5,
-        shadowRadius: 4,
-        elevation: 5
+        borderColor: "#5048e5",
+        borderWidth: 2,
     },
     textInput: {
         height: 50,
         flex: 1,
-        marginLeft: 20,
-        padding: 10,
+        marginLeft: 10,
+        color: '5048e5',
     },
     tableElem:{
         padding: 5,
