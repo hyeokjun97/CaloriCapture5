@@ -7,7 +7,8 @@ import {
 import DetailNutritionGraph from "./DetailNutritionGraph"
 import HistoryStorage from "../../../model/HistoryStorage"
 import HistoryInfo from "../../../model/History"
-import {G, Line, Rect} from "react-native-svg";
+import ScreenName from "../../ScreenNames";
+const RecommendChooseScreenName=ScreenName.RecommendChooseScreenName;
 
 
 export default function HistoryDetailScreen({route, navigation}){
@@ -60,8 +61,13 @@ export default function HistoryDetailScreen({route, navigation}){
     <View style={styles.body3}>
         {
             selectedDate==Today
-                ? <TouchableOpacity style={styles.NextMealRecomendationBtn}>
-                    <Text style={styles.NextMealRecomendationTxt}>Next Meal Recomendation</Text>
+                ? <TouchableOpacity
+                   style={styles.NextMealRecomendationBtn}
+                    onPress={()=>{
+                        navigation.navigate(RecommendChooseScreenName)
+                    }}
+                >
+                    <Text style={styles.NextMealRecomendationTxt}>Next Meal Recommend</Text>
                 </TouchableOpacity>
                 : null
         }

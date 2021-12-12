@@ -1,19 +1,22 @@
 import React, {useEffect, useState} from "react";
 import {
     Button, Text, View,
-    StyleSheet, SafeAreaView,
+    StyleSheet, SafeAreaView, TouchableOpacity,
 } from 'react-native';
 import API from "../../api/API";
 import {Calendar ,Agenda, CalendarList} from "react-native-calendars"
 import {NavigationContainer} from "@react-navigation/native";
 import ScreenName from '../ScreenNames';
 import HistoryDetailScreen from './detail/HistoryDetailScreen';
+import RecommendChooseScreen from "./RecommendChoose";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {selectedDayBackgroundColor} from "react-native-calendars/src/style";
-import HistoryInfo from "../../model/History"
+import HistoryStorage from "../../model/HistoryStorage"
 import User from "../../model/User"
 
+const HistoryScreenName=ScreenName.HistoryScreenName;
 const HistoryDetailScreenName =ScreenName.HistoryDetailScreenName;
+const RecommendChooseScreenName=ScreenName.RecommendChooseScreenName;
 
 const cur_date=Date();
 
@@ -27,14 +30,13 @@ function HistoryScreenHome({route, navigation}){
         });
     }
 
-    useEffect(()=>{
-        getMyHistoryInfo();
-    }, [myHistoryInfo]);
+
 
     const getMyHistoryInfo=()=>{
-            const tmpHistoryInfo= User.getMyHistory();
+            const tmpHistoryInfo= HistoryStorage.getHistory(User.getMyId());
             const dateOfHistory=Object.keys(tmpHistoryInfo);
             const marked={};
+            console.log(tmpHistoryInfo);
             dateOfHistory.map((date)=>{
                 let sum=0;
                 tmpHistoryInfo[`${date}`].map((oneMeal)=>{
@@ -57,6 +59,9 @@ function HistoryScreenHome({route, navigation}){
             setMarkedDate(marked);
             setMyHistoryInfo(tmpHistoryInfo);
     }
+    useEffect(()=>{
+        getMyHistoryInfo();
+    }, [myHistoryInfo]);
     return(
     <SafeAreaView style={styles.HistoryContainer}>
         <View style={styles.Header}>
@@ -114,8 +119,9 @@ function HistoryScreenHome({route, navigation}){
 export default function HistoryScreen({route, navigation}) {
     const Stack = createNativeStackNavigator();
     return(<Stack.Navigator>
-            <Stack.Screen name ='나의 월간 기록' component={HistoryScreenHome} />
+            <Stack.Screen name ={HistoryScreenName} component={HistoryScreenHome} />
             <Stack.Screen name={HistoryDetailScreenName} component={HistoryDetailScreen} />
+            <Stack.Screen name={RecommendChooseScreenName} component={RecommendChooseScreen}/>
         </Stack.Navigator>);
 }
 
