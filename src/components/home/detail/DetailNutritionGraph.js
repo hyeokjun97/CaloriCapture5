@@ -4,7 +4,7 @@ import {Grid, LineChart, AreaChart, PieChart, XAxis, YAxis, ProgressCircle,} fro
 import * as shape from "d3-shape";
 import {Circle, G, Line, Rect,Svg} from "react-native-svg";
 export default function DetailNutritionGraph({dateString,myDetailHistory,myMealsTotal,oneDayInfo}){
-    const data_percentage = Array.from({length:201},(v,i)=>i);
+    const data_percentage = Array.from({length:101},(v,i)=>i);
     const data_time=Array.from({length:13},(v,i)=>0);
     const data_kcal=Array.from({length:25},()=>0);
     const data_fat=Array.from({length:25},()=>0);

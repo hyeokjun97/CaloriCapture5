@@ -9,5 +9,5 @@ export default class ScreenNames{
     static LoginScreenName='로그인';
     static HistoryDetailScreenName='나의 일일 기록'
     static FoodDetailScreenName = '음식 인식 결과';
-
+    static RecommendChooseScreenName='식단 추천';
 }

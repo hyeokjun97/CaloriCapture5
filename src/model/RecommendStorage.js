@@ -9,14 +9,22 @@ class RecommendStorage{
         "오곡밥", "배추김치", "멸치볶음", "오징어튀김", "돼지고기장조림",
         "닭강정", "두부", "마늘쫑무침", "미역국", "콩나물무침", "현미밥"
     ]
-    static getRecommendFood=async(...foodRecCandies)=>{
+    static getMainDish(){
+        return this.#main_dish;
+    }
+    static getSideDish(){
+        return this.#side_dish;
+    }
+    static getRecommendFood=async(drisForMeal,...foodRecCandies)=>{
         return API.logic.runFunction("DB_and_reco_API",
             {
                 "cmd":"reco.make_reco_ranks",
                 "query":{
-                    "dris":{"탄수화물":40, "단백질":25, "지방":15, "칼로리":900},
+                    "dris":drisForMeal,
                     "food_set":[...foodRecCandies]
                 }
-            }).then((res)=>{return res;}).catch(console.log)
+            }).then((response)=>{return response;}).catch(console.log)
     }
 }
+
+module.exports = RecommendStorage;
